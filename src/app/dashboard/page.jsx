@@ -3,18 +3,12 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-// 🔹 কাস্টম ফরম্যাটেড ইউজার আইডি জেনারেটর (e.g., M-0001, A-0002)
+// কাস্টম ইউজার আইডি জেনারেটর (e.g., M-0042, A-0001)
 function formatDisplayUserId(id, role = "member") {
   if (!id) return "N/A";
-  
-  // রোলের প্রথম অক্ষর বড় হাতের (Admin হলে 'A', Member হলে 'M')
   const prefix = role ? role.charAt(0).toUpperCase() : "M";
-  
-  // MongoDB ID-এর শেষ ৪টি হেক্সাডেসিমাল ক্যারেক্টারকে নাম্বারে কনভার্ট করে 4-digit প্যাডিং
   const shortNum = parseInt(id.slice(-4), 16) % 10000;
-  const formattedNumber = String(shortNum).padStart(4, "0");
-  
-  return `${prefix}-${formattedNumber}`;
+  return `${prefix}-${String(shortNum).padStart(4, "0")}`;
 }
 
 export default async function DashboardPage() {
@@ -27,6 +21,7 @@ export default async function DashboardPage() {
   }
 
   const { user } = session;
+  const isVerified = Boolean(user.emailVerified);
   const formattedId = formatDisplayUserId(user.id, user.role);
 
   return (
@@ -38,8 +33,8 @@ export default async function DashboardPage() {
             Welcome back, <span className="text-indigo-600">{user.name || "User"}</span>! 👋
           </h1>
           <p className="mt-1 text-sm text-slate-500 font-medium">
-  {"Here is what's happening with your account today."}
-</p>
+            {"Here is what's happening with your account today."}
+          </p>
         </div>
         <div>
           <Link
@@ -51,27 +46,45 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* কালারফুল লাইট মোড কার্ডস */}
+      {/* মেট্রিক কার্ডস (ভেরিফাইড হলে Green, আনভেরিফাইড হলে Alert Red) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
         
-        {/* কার্ড ১: Account Status */}
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+        {/* কার্ড ১: Account Status (ডাইনামিক কালার) */}
+        <div
+          className={`rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ${
+            isVerified
+              ? "border-emerald-200 bg-emerald-50/70"
+              : "border-rose-300 bg-rose-50/80"
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+            <span
+              className={`text-xs font-bold uppercase tracking-wider ${
+                isVerified ? "text-emerald-800" : "text-rose-800"
+              }`}
+            >
               Account Status
             </span>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-sm shadow-emerald-500/30">
-              ✉️
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm ${
+                isVerified
+                  ? "bg-emerald-500 shadow-emerald-500/30"
+                  : "bg-rose-500 shadow-rose-500/30"
+              }`}
+            >
+              {isVerified ? "✉️" : "⚠️"}
             </div>
           </div>
           <p className="mt-4 text-xl font-bold text-slate-900 truncate">{user.email}</p>
           <div className="mt-3">
-            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
-              user.emailVerified
-                ? "bg-emerald-200/80 text-emerald-900"
-                : "bg-amber-100 text-amber-900 border border-amber-300"
-            }`}>
-              {user.emailVerified ? "● Verified" : "○ Unverified"}
+            <span
+              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
+                isVerified
+                  ? "bg-emerald-200/80 text-emerald-900 border border-emerald-300"
+                  : "bg-rose-100 text-rose-900 border border-rose-300 animate-pulse"
+              }`}
+            >
+              {isVerified ? "● Verified" : "✕ Action Required (Unverified)"}
             </span>
           </div>
         </div>
@@ -92,19 +105,47 @@ export default async function DashboardPage() {
           </span>
         </div>
 
-        {/* কার্ড ৩: Security Check */}
-        <div className="rounded-2xl border border-purple-200 bg-purple-50/70 p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+        {/* কার্ড ৩: Security Check (ডাইনামিক কালার) */}
+        <div
+          className={`rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ${
+            isVerified
+              ? "border-purple-200 bg-purple-50/70"
+              : "border-amber-300 bg-amber-50/80"
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-purple-800">
+            <span
+              className={`text-xs font-bold uppercase tracking-wider ${
+                isVerified ? "text-purple-800" : "text-amber-800"
+              }`}
+            >
               Security Check
             </span>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600 text-white shadow-sm shadow-purple-600/30">
-              🔒
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm ${
+                isVerified
+                  ? "bg-purple-600 shadow-purple-600/30"
+                  : "bg-amber-500 shadow-amber-500/30"
+              }`}
+            >
+              {isVerified ? "🔒" : "🔓"}
             </div>
           </div>
-          <p className="mt-4 text-2xl font-extrabold text-purple-900">Protected</p>
-          <span className="mt-2 block text-xs font-semibold text-purple-700">
-            Session Authenticated Securely
+          <p
+            className={`mt-4 text-2xl font-extrabold ${
+              isVerified ? "text-purple-900" : "text-amber-900"
+            }`}
+          >
+            {isVerified ? "Protected" : "Vulnerable"}
+          </p>
+          <span
+            className={`mt-2 block text-xs font-semibold ${
+              isVerified ? "text-purple-700" : "text-amber-700"
+            }`}
+          >
+            {isVerified
+              ? "Session Authenticated Securely"
+              : "Please verify email to protect account"}
           </span>
         </div>
 
@@ -122,7 +163,6 @@ export default async function DashboardPage() {
             <p className="font-bold text-slate-800 text-base">{user.name || "N/A"}</p>
           </div>
 
-          {/* 🔹 কাস্টম ফরম্যাটেড ইউজার আইডি */}
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <span className="text-slate-500 text-xs font-semibold uppercase block mb-1">User ID</span>
             <div className="flex items-center gap-2">
@@ -134,9 +174,15 @@ export default async function DashboardPage() {
 
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <span className="text-slate-500 text-xs font-semibold uppercase block mb-1">Email Status</span>
-            <p className="font-bold text-slate-800">
-              {user.emailVerified ? "Verified Account" : "Pending Confirmation"}
-            </p>
+            <span
+              className={`inline-flex items-center gap-1 font-bold text-sm px-2.5 py-0.5 rounded-lg mt-0.5 ${
+                isVerified
+                  ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                  : "bg-rose-100 text-rose-800 border border-rose-200"
+              }`}
+            >
+              {isVerified ? "✓ Verified Account" : "⚠ Pending Confirmation"}
+            </span>
           </div>
 
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
