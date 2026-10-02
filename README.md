@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🔐 Next.js BetterAuth System
 
-## Getting Started
+A modern, secure, and full-featured authentication & user management system built with **Next.js (App Router)**, **BetterAuth**, **HeroUI / Tailwind CSS**, and **MongoDB**.
 
-First, run the development server:
+---
 
+## ✨ Features
+
+- 🔑 **Complete Authentication**: Email/Password authentication powered by BetterAuth.
+- 🌐 **OAuth Integration**: Social sign-in with **Google** and **GitHub**.
+- ✉️ **Email Verification**: Instant account verification flow and resend verification link support.
+- 🎨 **Dynamic Status UI**:
+  - **Verified Users**: Clean green/emerald theme indicators.
+  - **Unverified Users**: Warning amber/rose pulse indicators with action buttons.
+- 👤 **Profile Management**:
+  - Smooth toggle drawer for changing Display Name.
+  - Secure Password Change with current password validation.
+  - Update email address with verification workflow.
+- 📊 **Dashboard Overview**: User metrics, role assignment (Member/Admin), account statistics, and custom user ID display.
+- 🛠️ **Dedicated Services Page**: Clean bento grid showcase of application services.
+- 💎 **Modern Light UI**: Built with accessible UI components, Tailwind CSS, and clean typography.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (App Router)
+- **Authentication**: [BetterAuth](https://www.better-auth.com/)
+- **Database**: MongoDB
+- **Styling**: Tailwind CSS & [HeroUI](https://heroui.com/)
+- **Icons**: Gravity UI Icons
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 ```bash
-npm run dev
+git clone [https://github.com/Nahiyan24bd/next-js-better-auth.git](https://github.com/Nahiyan24bd/next-js-better-auth.git)
+cd next-js-better-auth
+
+
+npm install
 # or
-yarn dev
+yarn install
 # or
-pnpm dev
-# or
-bun dev
-```
+pnpm install
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# App URL
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+# BetterAuth Secret (Generate via `openssl rand -base64 32`)
+BETTER_AUTH_SECRET=your_better_auth_secret_key
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Database (MongoDB connection string)
+MONGODB_URI=your_mongodb_connection_string
 
-## Learn More
+# OAuth Providers
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-To learn more about Next.js, take a look at the following resources:
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Email Service (Resend / SMTP)
+RESEND_API_KEY=your_resend_api_key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+├── src/
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   ├── sign-in/        # Sign In page
+│   │   │   └── sign-up/        # Registration page
+│   │   ├── api/
+│   │   │   └── auth/           # BetterAuth API handler
+│   │   ├── dashboard/          # Dynamic Dashboard with status cards
+│   │   ├── profile/            # Profile settings & credentials update
+│   │   ├── services/           # Services list page
+│   │   ├── layout.jsx          # Root Layout & Global Navbar
+│   │   └── page.jsx            # Landing / Home page
+│   └── lib/
+│       ├── auth.js             # Server-side BetterAuth configuration
+│       └── auth-client.js      # Client-side BetterAuth instance
+├── public/
+└── README.md
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🛡️ License
+This project is open-source and available under the MIT License.
