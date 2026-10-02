@@ -17,19 +17,23 @@ export default function Navbar() {
         </div>
     }
 
-    const links = <>
+    const links = (
+    <>
+      <li>
+        <Link href="/services">Services</Link>
+      </li>
+      <li>
+        <Link href="/dashboard" className="font-medium text-accent" aria-current="page">
+          Dashboard
+        </Link>
+      </li>
+      {session?.user && (
         <li>
-            <Link href="#">Servises</Link>
+          <Link href="/profile">Profile</Link>
         </li>
-        <li>
-            <Link href="/dashboard" className="font-medium text-accent" aria-current="page">
-                Dashboard
-            </Link>
-        </li>
-        {session?.user &&<li>
-            <Link href="/profile">Profile</Link>
-        </li>}
+      )}
     </>
+  );
 
     const authLinks = <>
         {
